@@ -57,8 +57,13 @@ def list_products_per_tag(tag_id):
 
 
 def add_product_to_catalog(user_id, product):
+    # function was fixed
     user = models.User.get_by_id(user_id)
-    user.owned_products.append(product)
+    current_owned = []
+    for item in user.owned_products:
+        current_owned.append(item)
+    current_owned.append(product)
+    user.owned_products=current_owned
     user.save()
     return None
 
@@ -76,6 +81,7 @@ def purchase_product(product_id, buyer_id, quantity):
         product1.quantity_on_stock -= quantity
         product1.save()
         models.Transaction.create(product=product1, user_buyer=buyer, quantity=quantity, timestamp=datetime.now())
+        print("transaction complete")
         return None
     else:
         print("could not sell the requested amount")
@@ -196,10 +202,14 @@ def run_tests():
         print("test products per tag", item.name)
 
     purchase_product(1,1,1)
-    query = models.Transaction.select()
-    for item in query:
-        print(item.user_buyer.name)
-        print(item.product.name)
+    purchase_product(1,1,1)
+    purchase_product(1,1,1)
 
-    remove_product(4)
+
+    harp = models.Product.get_by_id(4)
+    add_product_to_catalog(1, harp)
+    
+
     models.delete_tables()
+
+run_tests()

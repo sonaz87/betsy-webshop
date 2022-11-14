@@ -12,8 +12,8 @@ class Tag(peewee.Model):
 class Product(peewee.Model):
     name = peewee.TextField()
     description = peewee.TextField()
-    price_in_cents = peewee.IntegerField(constraints=[peewee.Check("price_in_cents > 0")])
-    quantity_on_stock = peewee.IntegerField(constraints=[peewee.Check("quantity_on_stock > 0")])
+    price_in_cents = peewee.IntegerField(constraints=[peewee.Check("price_in_cents >= 0")])
+    quantity_on_stock = peewee.IntegerField(constraints=[peewee.Check("quantity_on_stock >= 0")])
     tags = peewee.ManyToManyField(Tag)
 
     class Meta:
